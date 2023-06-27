@@ -1,0 +1,19 @@
+<html>
+    <head>
+        <script src="https://cdn.ckeditor.com/ckeditor5/38.0.1/classic/ckeditor.js"></script>
+    </head>
+    <body>
+    <form method="post">
+        <textarea id="editor" name="editor"></textarea>
+        <input type="submit" name="submit">
+        <script>
+            /*ClassicEditor- CKEDITOR 5 class that provides methods for creating and configuring editor instances.entry point for working with ckeditor 5.
+           .create - used to create instance of an editor, in this case text area element with id editor is selected
+            ClassicEditor.create(...), the CKEditor 5 instance is created and replaces the specified textarea element with a fully functional editor*/
+            ClassicEditor
+                .create(document.querySelector('#editor'))
+        </script>
+</form>
+</body>
+</html>
+
