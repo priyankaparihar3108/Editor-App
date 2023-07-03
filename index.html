@@ -1,19 +1,84 @@
 <html>
     <head>
-        <script src="https://cdn.ckeditor.com/ckeditor5/38.0.1/classic/ckeditor.js"></script>
+        <script type="text/javascript"src="https://cdn.ckeditor.com/4.21.0/standard/ckeditor.js"></script>
     </head>
     <body>
     <form method="post">
-        <textarea id="editor" name="editor"></textarea>
-        <input type="submit" name="submit">
-        <script>
+            <textarea id="editor" name="editor">
+        </textarea>
+        <!-- <script>
             /*ClassicEditor- CKEDITOR 5 class that provides methods for creating and configuring editor instances.entry point for working with ckeditor 5.
-           .create - used to create instance of an editor, in this case text area element with id editor is selected
+            .create - used to create instance of an editor, in this case text area element with id editor is selected
             ClassicEditor.create(...), the CKEditor 5 instance is created and replaces the specified textarea element with a fully functional editor*/
-            ClassicEditor
-                .create(document.querySelector('#editor'))
-        </script>
-</form>
+            // ClassicEditor
+            //         .create(document.querySelector('#editor'))
+            CKEDITOR.replace('editor');
+            </script> -->
+        </form>   
+                <button onclick="saveContent()">Save</button>
+                <button onclick="resetContent()">Reset</button>
+                <button onclick="loadContent()">Load</button>
+                <div id="content">
+                <script>
+                  function saveContent(){
+ /*CurreContent retrieves the current content of ckeditor,saveCont retrive the retrieves the previously saved content from local storage, if there is saved content
+then parse it into json array otherwise initialize empty array and then push CurrContent,then Convert the updated array back to a JSON string.
+*/
+                    var CurrContent=CKEDITOR.instances['editor'].getData();
+                    var saveCont=localStorage.getItem('CurrContent');
+                    var arr=saveCont ? JSON.parse(saveCont) : [];
+                    arr.push(CurrContent);
+                    localStorage.setItem('CurrContent',JSON.stringify(arr));
+                    console.log(saveCont);
+                    alert('Content Saved');  
+                    CKEDITOR.instances['editor'].setData('');
+                                                                             
+                }
+                function loadContent(){
+                    //clear the previous element
+                    var contentList = document.getElementById('content');
+                    contentList.innerHTML = '';
+                    //retrieve the saved data from localStorage
+                    var savedContent=localStorage.getItem('CurrContent');
+                    console.log(savedContent);
+                    //if saved content is available
+                    if(savedContent){
+                        // Parse the saved content into array as i local storage it is store as string to use it as an array
+                        // in javascript we have to parse it
+                        var contentArray=JSON.parse(savedContent);
+                        for(var i=0;i<contentArray.length;i++){
+                             // Get the editor data for the current item
+                            var editorData=contentArray[i];
+                            // Create a div element to display the content
+                            var contentItemDiv=document.createElement('div');
+                            contentItemDiv.innerHTML=editorData;
+                            // Append the content div to the content list element
+                            contentList.appendChild(contentItemDiv);
+                             // Create a button element
+                            var button=document.createElement("button");
+                            button.type="button";
+                            contentList.appendChild(button);
+                            button.onclick=displayContent(editorData);
+                            button.innerHTML="ADD";
+                        }
+                    }
+                    // To display the content in the ckeditor
+                    function displayContent(data){
+                        return function(){
+                        console.log(data);
+                        CKEDITOR.instances['editor'].setData(data);
+                        }
+                    }
+                }
+                // To remove from local storage
+                function resetContent(){
+                    CKEDITOR.instances['editor'].setData('');
+                    localStorage.removeItem('CurrContent');
+                    //alert('Content Reset');
+                }
+                CKEDITOR.replace('editor');
+            </script>
+            </div>
 </body>
 </html>
 
